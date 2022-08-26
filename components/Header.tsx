@@ -15,7 +15,7 @@ function Header() {
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener("sroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
   return (
