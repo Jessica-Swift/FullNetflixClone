@@ -8,6 +8,7 @@ import { Movie } from "../typings";
 function Modal() {
   const [showModal, setShowModal] = useRecoilState(modalState);
   const [movie, setMovie] = useState<Movie | null>(null);
+  const [data, setData] = useState();
 
   useEffect(() => {
     if (!movie) return;
@@ -19,9 +20,17 @@ function Modal() {
         }/${movie?.id}?api_key=${
           process.env.NEXT_PUBLIC_API_KEY
         }&language=en-US&append_to_response=videos`
-      ); 
+      ).then((response) => response.json());
+      setData(data);
+
+      if(data?.videos) {
+        const index = data.videos.results
+      }
     }
-  }, []);
+    fetchMovie;
+  }, [movie]);
+
+  console.log(data);
 
   const handleClose = () => {
     setShowModal(false);
