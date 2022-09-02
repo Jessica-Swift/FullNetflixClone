@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 import MuiModal from "@mui/material/Modal";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { modalState } from "../atoms/modalAtoms";
+import { modalState, movieState } from "../atoms/modalAtoms";
 import { XIcon } from "@heroicons/react/outline";
-import { Movie } from "../typings";
+import { Element, Genre, Movie } from "../typings";
+import ReactPlayer from "react-player";
 
 function Modal() {
   const [showModal, setShowModal] = useRecoilState(modalState);
-  const [movie, setMovie] = useState<Movie | null>(null);
-  const [data, setData] = useState();
+  const [movie, setMovie] = useRecoilState(movieState);
+  const [trailer, setTrailer] = useState("");
+  const [genres, setGenres] = useState<Genre[]>([]);
+  const [muted, setMuted] = useState(true);
 
   useEffect(() => {
     if (!movie) return;
@@ -20,21 +23,29 @@ function Modal() {
         }/${movie?.id}?api_key=${
           process.env.NEXT_PUBLIC_API_KEY
         }&language=en-US&append_to_response=videos`
-      ).then((response) => response.json());
-      setData(data);
+      )
+        .then((response) => response.json())
+        .catch((err) => console.log(err.message));
 
-      if(data?.videos) {
-        const index = data.videos.results
+      if (data?.videos) {
+        const index = data.videos.results.findIndex(
+          (element: Element) => element.type === "Trailer"
+        );
+
+        setTrailer(data.videos?.results[index]?.key);
+      }
+      if (data?.genres) {
+        setGenres(data.genres);
       }
     }
     fetchMovie;
   }, [movie]);
 
-  console.log(data);
-
   const handleClose = () => {
     setShowModal(false);
   };
+
+  console.log(trailer);
 
   return (
     <MuiModal open={showModal} onClose={handleClose}>
@@ -45,7 +56,16 @@ function Modal() {
         >
           <XIcon className="h-6 w-6"></XIcon>
         </button>
-        <div></div>
+        <div>
+          <ReactPlayer
+            url={`https://www.youtube.com/watch?v=${trailer}`}
+            width="100%"
+            height="100%"
+            style={{ position: "absolute", top: "0", left: "0" }}
+            playing
+            muted={muted}
+          />
+        </div>
       </>
     </MuiModal>
   );
