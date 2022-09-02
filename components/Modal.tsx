@@ -1,11 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import MuiModal from "@mui/material/Modal";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { modalState } from "../atoms/modalAtoms";
 import { XIcon } from "@heroicons/react/outline";
+import { Movie } from "../typings";
 
 function Modal() {
   const [showModal, setShowModal] = useRecoilState(modalState);
+  const [movie, setMovie] = useState<Movie | null>(null);
+
+  useEffect(() => {
+    if (!movie) return;
+
+    async function fetchMovie() {
+      const data = await fetch(
+        `https://api.themoviedb.org/3/${
+          movie?.media_type === "tv" ? "tv" : "movie"
+        }/${movie?.id}?api_key=${
+          process.env.NEXT_PUBLIC_API_KEY
+        }&language=en-US&append_to_response=videos`
+      ); 
+    }
+  }, []);
+
   const handleClose = () => {
     setShowModal(false);
   };
@@ -19,6 +36,7 @@ function Modal() {
         >
           <XIcon className="h-6 w-6"></XIcon>
         </button>
+        <div></div>
       </>
     </MuiModal>
   );
