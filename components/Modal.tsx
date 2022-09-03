@@ -4,14 +4,14 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { modalState, movieState } from "../atoms/modalAtoms";
 import { XIcon } from "@heroicons/react/outline";
 import { Element, Genre, Movie } from "../typings";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/lazy";
 
 function Modal() {
   const [showModal, setShowModal] = useRecoilState(modalState);
   const [movie, setMovie] = useRecoilState(movieState);
-  const [trailer, setTrailer] = useState("");
+  const [trailer, setTrailer] = useState(``);
   const [genres, setGenres] = useState<Genre[]>([]);
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);
 
   useEffect(() => {
     if (!movie) return;
@@ -59,6 +59,7 @@ function Modal() {
         <div>
           <ReactPlayer
             url={`https://www.youtube.com/watch?v=${trailer}`}
+            // url="https://www.youtube.com/watch?v=kqZlpPndE6k"
             width="100%"
             height="100%"
             style={{ position: "absolute", top: "0", left: "0" }}
