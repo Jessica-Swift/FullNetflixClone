@@ -38,7 +38,7 @@ function Modal() {
         setGenres(data.genres);
       }
     }
-    fetchMovie;
+    fetchMovie();
   }, [movie]);
 
   const handleClose = () => {
@@ -54,7 +54,7 @@ function Modal() {
           onClick={handleClose}
           className="modalButton absolute right-5 top-5 !z-40 h-9 w-9 border-none bg-[#181818] hover:bg-[#181818]"
         >
-          <XIcon className="h-6 w-6"></XIcon>
+          <XIcon className="h-6 w-6" />
         </button>
         <div>
           <ReactPlayer
